@@ -1,0 +1,2 @@
+"""Application test suite."""
+
