@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal, Self
 
-from pydantic import model_validator
+from pydantic import Field, PostgresDsn, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,8 +21,22 @@ class Settings(BaseSettings):
 
     name: str = "AWS Cloud Security Purple Team Lab"
     environment: Literal["local", "development", "test", "production"] = "local"
-    version: str = "0.1.0"
+    version: str = "0.2.0"
     debug: bool = False
+    database_url: PostgresDsn = Field(repr=False)
+
+    @field_validator("database_url")
+    @classmethod
+    def require_psycopg_driver(
+        cls,
+        database_url: PostgresDsn,
+    ) -> PostgresDsn:
+        """Keep the configured SQLAlchemy URL aligned with the installed driver."""
+        if database_url.scheme != "postgresql+psycopg":
+            raise ValueError(
+                "APP_DATABASE_URL must use the postgresql+psycopg scheme"
+            )
+        return database_url
 
     @model_validator(mode="after")
     def reject_debug_in_production(self) -> Self:
