@@ -1,4 +1,4 @@
-"""Shared SQLAlchemy declarative base for future database models."""
+"""Shared SQLAlchemy declarative base for application database models."""
 
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase

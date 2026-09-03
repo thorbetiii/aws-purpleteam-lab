@@ -15,6 +15,9 @@ async def test_health_check_returns_ok() -> None:
         environment="test",
         version="test-version",
         debug=False,
+        database_url=(
+            "postgresql+psycopg://test_user:test_password@127.0.0.1:1/test_db"
+        ),
         _env_file=None,
     )
     app.dependency_overrides[get_settings] = lambda: test_settings
