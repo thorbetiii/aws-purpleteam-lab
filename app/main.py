@@ -4,7 +4,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 
+from app.api.errors import request_validation_error_handler
+from app.api.routes.auth import router as auth_router
 from app.api.routes.health import router as health_router
 from app.core.config import get_settings
 from app.db.session import dispose_engine
@@ -36,7 +39,12 @@ def create_app() -> FastAPI:
             "/docs/oauth2-redirect" if documentation_enabled else None
         ),
     )
+    application.add_exception_handler(
+        RequestValidationError,
+        request_validation_error_handler,
+    )
     application.include_router(health_router)
+    application.include_router(auth_router)
 
     return application
 
