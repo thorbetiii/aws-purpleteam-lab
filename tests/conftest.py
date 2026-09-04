@@ -8,3 +8,6 @@ import os
 os.environ["APP_DATABASE_URL"] = (
     "postgresql+psycopg://test_user:test_password@127.0.0.1:1/test_db"
 )
+os.environ["APP_JWT_SECRET"] = (
+    "test-only-jwt-signing-secret-never-use-in-a-real-environment"
+)
